@@ -34,20 +34,6 @@ app.get('/', (req, res) => {
 })
 
 app.post('/', upload.single('image'), function(req, res, next) {
-    // console.log(req.file)
-
-    // var request = require('request')
-    // var options = {
-    //     method: 'POST',
-    //     url: 'https://api.imgur.com/3/image',
-    //     headers: {
-    //         Authorization: 'Client-ID {{clientId}}'
-    //     },
-    //     formData: {
-    //         image: 'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
-    //     }
-    // }
-
     const options = {
         headers: { Authorization: 'Client-ID 5da6ca0a43b0e11' }
     }
@@ -66,12 +52,24 @@ app.post('/', upload.single('image'), function(req, res, next) {
             console.log(err)
             res.send('Error!')
         })
+})
 
-    // const base = base64_encode(req.file.path)
-
-    // res.send(base)
-
-    // res.status(201).json({ msg: 'OK' })
+app.get('/trends', (req, res) => {
+    const token =
+        'AAAAAAAAAAAAAAAAAAAAAJV7CQEAAAAAm6NIjWb%2BhDhGjGl8V4zgqVs9L14%3DMNNxR1ThsEXtvOJBJ3RnTQV3pt41dlU1TTJRs0pPemJ4JQnBs6'
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    }
+    axios
+        .get('https://api.twitter.com/1.1/trends/place.json?id=1', config)
+        .then(result => {
+            res.send(result.data[0].trends)
+            // res.send(result)
+        })
+        .catch(err => {
+            console.log(err)
+            // res.status(404)
+        })
 })
 
 app.listen(port, () => console.log(`App listening on port ${port}!`))
